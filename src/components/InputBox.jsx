@@ -1,9 +1,7 @@
-import React, {useId} from 'react'
+import React, { useId } from 'react';
 
 function InputBox({
-    // from ya to
     label,
-    // from value
     amount,
     onAmountChange,
     onCurrencyChange,
@@ -13,12 +11,23 @@ function InputBox({
     currencyDisable = false,
     className = "",
 }) {
-   const amountInputId = useId()
+    const amountInputId = useId();
+
+    const handleAmountChange = (e) => {
+        let newValue = Number(e.target.value);
+        // Check if the new value is less than 0
+        if (newValue < 0) {
+            // If less than 0, set it to 0
+            newValue = 0;
+        }
+        // Call the parent component's onAmountChange function with the new value
+        onAmountChange && onAmountChange(newValue);
+    };
+
     return (
-        // classname in backstick is for adding future CSS by variable
         <div className={`bg-white p-3 rounded-lg text-sm flex ${className}`}>
             <div className="w-1/2">
-                <label htmlFor={amountInputId}  className="text-black/40 mb-2 inline-block">
+                <label htmlFor={amountInputId} className="text-black/40 mb-2 inline-block">
                     {label}
                 </label>
                 <input
@@ -28,7 +37,7 @@ function InputBox({
                     placeholder="Amount"
                     disabled={amountDisable}
                     value={amount}
-                    onChange={(e) => onAmountChange && onAmountChange(Number(e.target.value))}
+                    onChange={handleAmountChange} // Use the custom handleAmountChange function
                 />
             </div>
             <div className="w-1/2 flex flex-wrap justify-end text-right">
@@ -39,11 +48,11 @@ function InputBox({
                     onChange={(e) => onCurrencyChange && onCurrencyChange(e.target.value)}
                     disabled={currencyDisable}
                 >
-                        {currencyOptions.map((currency) => (
-                            <option key={currency} value={currency}>
+                    {currencyOptions.map((currency) => (
+                        <option key={currency} value={currency}>
                             {currency}
-                            </option>
-                        ))}
+                        </option>
+                    ))}
                 </select>
             </div>
         </div>
